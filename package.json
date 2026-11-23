@@ -1,0 +1,33 @@
+{
+  "name": "agy-wallpaper-engine",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Local Wallpaper Engine (Scene/Video/Web/Image) + iOS Liquid Glass theme engine for Google Antigravity Desktop",
+  "keywords": [
+    "antigravity",
+    "wallpaper-engine",
+    "liquid-glass",
+    "webwallgl",
+    "windows",
+    "theme"
+  ],
+  "author": "moran-622",
+  "homepage": "https://github.com/moran-622/agy-wallpaper-engine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moran-622/agy-wallpaper-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moran-622/agy-wallpaper-engine/issues"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "webwallgl": "^3.0.3"
+  }
+}

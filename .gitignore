@@ -1,0 +1,8 @@
+node_modules/
+.ref/
+.tmp/
+.playwright-mcp/
+briefs/
+SPEC.md
+HANDOFF.md
+*.log

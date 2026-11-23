@@ -1,0 +1,506 @@
+body[data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"],
+body[data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"].theme-standalone,
+body[data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"].theme-light {
+  --agy-tone: 255 253 250;
+  --agy-ink: #11151b;
+  --agy-muted-ink: #343c47;
+  --agy-edge: 54 68 84;
+  --agy-frame: rgb(var(--agy-edge) / calc(var(--agy-glass-border-glow) * 0.52));
+  --agy-highlight: rgba(255, 255, 255, min(0.88, calc(var(--agy-glass-border-glow) * 1.45)));
+  --agy-popup: rgb(var(--agy-tone) / 0.92);
+  --agy-popup-edge: rgb(var(--agy-edge) / 0.24);
+  --agy-surface-bg: rgb(var(--agy-tone) / var(--agy-glass-surface-alpha));
+  --agy-sidebar-bg: rgb(var(--agy-tone) / var(--agy-glass-sidebar-alpha));
+  --agy-card-bg: rgb(var(--agy-tone) / var(--agy-glass-card-alpha));
+  --agy-inner-chip-bg: rgb(var(--agy-tone) / min(0.92, calc(var(--agy-glass-card-alpha) + 0.12)));
+  --agy-composer-bg: rgb(var(--agy-tone) / min(0.94, calc(var(--agy-glass-card-alpha) + 0.10)));
+  --background: transparent !important;
+  --shell-canvas: transparent !important;
+  --sidebar: var(--agy-sidebar-bg) !important;
+  --color-sidebar: var(--agy-sidebar-bg) !important;
+  --sidebar-secondary: rgb(var(--agy-tone) / calc(var(--agy-glass-sidebar-alpha) * 0.78)) !important;
+  --sidebar-muted: rgb(var(--agy-tone) / calc(var(--agy-glass-sidebar-alpha) * 0.65)) !important;
+  --card: var(--agy-card-bg) !important;
+  --card-foreground: var(--agy-ink) !important;
+  --popover: var(--agy-popup) !important;
+  --popover-foreground: var(--agy-ink) !important;
+  --ag-composer-card-bg: var(--agy-composer-bg) !important;
+  --ag-composer-tray-bg: rgb(var(--agy-tone) / calc(var(--agy-glass-card-alpha) * 0.78)) !important;
+  --border: var(--agy-frame) !important;
+  --card-border: var(--agy-frame) !important;
+  --glass-border: var(--agy-frame) !important;
+  --foreground: var(--agy-ink) !important;
+  --secondary-foreground: var(--agy-ink) !important;
+  --muted-foreground: var(--agy-muted-ink) !important;
+  --code-foreground: #141921 !important;
+  --ag-sidebar-fg: var(--agy-ink) !important;
+  --ag-sidebar-row-fg: var(--agy-ink) !important;
+  --ag-sidebar-header-fg: var(--agy-muted-ink) !important;
+  --ag-composer-ctrl-fg: var(--agy-ink) !important;
+  --ag-composer-top-fg: var(--agy-ink) !important;
+  background-color: transparent !important;
+}
+
+body[data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-tone="dark"],
+body[data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"][data-agy-we-glass="on"]:not([data-agy-we-tone="light"]):is(.dark, .theme-dark, .dark body, .theme-dark body, [data-agy-we-preset="cinema-dark"]) {
+  --agy-tone: 16 20 30;
+  --agy-ink: #f6f4ee;
+  --agy-muted-ink: #cbd3e0;
+  --agy-edge: 224 236 255;
+  --agy-frame: rgb(var(--agy-edge) / calc(var(--agy-glass-border-glow) * 0.62));
+  --agy-highlight: rgba(255, 255, 255, calc(var(--agy-glass-border-glow) * 0.72));
+  --agy-popup: rgb(var(--agy-tone) / 0.94);
+  --agy-popup-edge: rgb(var(--agy-edge) / 0.24);
+  --agy-inner-chip-bg: rgb(255 255 255 / 0.14);
+  --foreground: var(--agy-ink) !important;
+  --color-foreground: var(--agy-ink) !important;
+  --card-foreground: var(--agy-ink) !important;
+  --color-card-foreground: var(--agy-ink) !important;
+  --popover-foreground: var(--agy-ink) !important;
+  --color-popover-foreground: var(--agy-ink) !important;
+  --secondary-foreground: var(--agy-ink) !important;
+  --color-secondary-foreground: var(--agy-ink) !important;
+  --muted-foreground: var(--agy-muted-ink) !important;
+  --color-muted-foreground: var(--agy-muted-ink) !important;
+  --code-foreground: #f4f6fa !important;
+}
+
+body[data-agy-we-glass="on"][data-agy-we-tone="dark"] #root :is([data-testid="agent-response"], [data-testid="agent-response"] *, .agy-user-bubble, .agy-user-bubble *, [data-testid="user-message-bubble"], [data-testid="user-message-bubble"] *, .surface-composer-card, .surface-composer-card *, [data-testid="pane-titlebar-toolbar"], [data-testid="pane-titlebar-toolbar"] *, .agy-inset-shell .z-50, .agy-inset-shell .z-50 *):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"]:not([data-agy-we-tone="light"])[data-agy-we-preset="cinema-dark"] #root :is([data-testid="agent-response"], [data-testid="agent-response"] *, .agy-user-bubble, .agy-user-bubble *, [data-testid="user-message-bubble"], [data-testid="user-message-bubble"] *, .surface-composer-card, .surface-composer-card *, [data-testid="pane-titlebar-toolbar"], [data-testid="pane-titlebar-toolbar"] *, .agy-inset-shell .z-50, .agy-inset-shell .z-50 *):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  color: var(--agy-ink) !important;
+}
+
+body[data-agy-we-glass="on"][data-agy-we-tone="dark"] #root [data-main-content-body] :is(.text-muted-foreground, .text-secondary-foreground),
+body[data-agy-we-glass="on"]:not([data-agy-we-tone="light"])[data-agy-we-preset="cinema-dark"] #root [data-main-content-body] :is(.text-muted-foreground, .text-secondary-foreground) {
+  color: var(--agy-muted-ink) !important;
+}
+
+body[data-agy-we-glass="on"][data-agy-we-tone="dark"] #root [role="navigation"] a.agy-button,
+body[data-agy-we-glass="on"]:not([data-agy-we-tone="light"])[data-agy-we-preset="cinema-dark"] #root [role="navigation"] a.agy-button {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--agy-ink) !important;
+  border-color: var(--agy-frame) !important;
+}
+
+body[data-agy-we-glass="on"] #root {
+  transition: opacity 220ms ease;
+}
+
+body[data-agy-we-glass="on"][data-agy-we-peek="on"] #root {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-shell,
+body[data-agy-we-glass="on"] #root .agy-inset-shell,
+body[data-agy-we-glass="on"] #root .agy-sheet,
+body[data-agy-we-glass="on"] #root [class*="bg-[var(--shell-canvas)]"] {
+  background-color: transparent !important;
+  color: var(--agy-ink);
+}
+
+body[data-agy-we-glass="on"] #root .agy-sheet [data-main-content-body]:not([data-has-browser-hole="true"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] #root .agy-sheet [data-main-content-body]:not([data-has-browser-hole="true"]) .bg-background:not(:where(
+  [role="dialog"], [role="dialog"] *, [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-surface-bg) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  color: var(--agy-ink);
+}
+
+body[data-agy-we-glass="on"] #root .agy-shell > div:first-child:has(.agy-titlebar):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] #root .agy-shell > div:has([data-testid="title-menu-bar"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  position: relative !important;
+  z-index: 90 !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-shell [data-testid="title-menu-bar"].bg-sidebar:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] #root .agy-shell [data-testid="title-menu-bar"]:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] #root .agy-titlebar:not(:has([data-testid="title-menu-bar"])):not(:where(
+  [data-testid="title-menu-bar"] *,
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-sidebar-bg) !important;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  border-bottom: 1px solid var(--agy-frame);
+  color: var(--agy-ink) !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([role="navigation"].bg-sidebar, [data-testid="conversation-list-sidebar"]):not(:where(
+  :is([role="dialog"], .agy-dialog) *, [role="navigation"].bg-sidebar [data-testid="conversation-list-sidebar"], [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-sidebar-bg) !important;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  border-right: 1px solid var(--agy-frame);
+  box-shadow: inset -1px 0 0 var(--agy-highlight);
+  color: var(--agy-ink);
+}
+
+body[data-agy-we-glass="on"] #root [role="navigation"] .overflow-y-auto,
+body[data-agy-we-glass="on"] #root [role="navigation"].bg-sidebar > div,
+body[data-agy-we-glass="on"] #root [role="navigation"] .bg-sidebar,
+body[data-agy-we-glass="on"] #root [data-testid="project-header"] {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"]:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-card-bg) !important;
+  color: var(--agy-ink) !important;
+  border-radius: 18px;
+  padding: 14px 20px;
+  margin-block: 6px;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--agy-highlight),
+    0 0 0 1px var(--agy-frame),
+    0 10px 30px -14px rgb(10 18 36 / 0.34);
+  contain: paint;
+  transform: translateZ(0);
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-host:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+  transform: none !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-scroll:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgb(var(--agy-edge) / 0.36) transparent !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-frame:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  max-width: none !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-scroll::-webkit-scrollbar {
+  display: block !important;
+  height: 10px !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-scroll::-webkit-scrollbar-track {
+  background: rgb(var(--agy-edge) / 0.08) !important;
+  border-radius: 9999px;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--agy-edge) / 0.36) !important;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 9999px;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--agy-edge) / 0.58) !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-user-bubble-frame {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+body[data-agy-we-glass="on"] #root :is(.agy-user-bubble, [data-testid="user-message-bubble"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-composer-bg) !important;
+  color: var(--agy-ink) !important;
+  border-radius: 16px !important;
+  padding: 10px 14px !important;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--agy-highlight),
+    0 0 0 1px var(--agy-frame),
+    0 8px 24px -10px rgb(10 18 36 / 0.32);
+  contain: paint;
+  transform: translateZ(0);
+}
+
+body[data-agy-we-glass="on"] #root .surface-composer {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .surface-composer-card:not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-composer-bg) !important;
+  color: var(--agy-ink) !important;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(175%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--agy-highlight),
+    0 0 0 1px var(--agy-frame),
+    0 12px 34px -12px rgb(10 18 36 / 0.38);
+  contain: paint;
+  transform: translateZ(0);
+}
+
+body[data-agy-we-glass="on"] #root .agy-sheet :is(.pointer-events-none[class*="bottom-0"], [class*="bg-gradient-to-t"], [style*="linear-gradient"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] :is(pre, :not(pre) > code, [data-testid="worked-for-collapsible"]),
+body[data-agy-we-glass="on"] :is([role="dialog"], .agy-dialog) :is(.agy-card, .bg-card, pre, :not(pre) > code) {
+  background-color: var(--agy-inner-chip-bg) !important;
+  color: var(--agy-ink);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: inset 0 0 0 1px var(--agy-frame);
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] :not(pre) > code {
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + div:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-working"], [data-testid="working-indicator"], [data-testid="worked-for-collapsible"]):not(:where(
+  [data-testid="agent-response"] *,
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  width: fit-content;
+  border-radius: 10px;
+  padding: 2px 8px;
+  background-color: rgb(var(--agy-tone) / min(0.76, var(--agy-glass-card-alpha))) !important;
+  color: var(--agy-muted-ink) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .bg-card:not(:where(
+  :is([role="dialog"], .agy-dialog, [data-testid="agent-response"], .surface-composer-card) *,
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-card-bg) !important;
+  color: var(--agy-ink) !important;
+}
+
+body[data-agy-we-glass="on"] #root :is(.agy-card, [data-project-card="true"], [data-side-panel-body], [data-testid="new-tab-search-input"]):not(:where(
+  :is([role="dialog"], .agy-dialog, [data-testid="agent-response"], .agy-user-bubble, .surface-composer-card, [role="navigation"], [data-testid="conversation-list-sidebar"], .agy-card, [data-project-card="true"], [data-side-panel-body]) *,
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-card-bg) !important;
+  color: var(--agy-ink) !important;
+  backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(var(--agy-glass-blur)) saturate(170%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--agy-highlight),
+    0 0 0 1px var(--agy-frame),
+    0 10px 28px -12px rgb(10 18 36 / 0.34);
+  contain: paint;
+  transform: translateZ(0);
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="breadcrumb-segment"],
+body[data-agy-we-glass="on"] #root [data-testid="pane-titlebar-toolbar"]:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-composer-bg) !important;
+  color: var(--agy-ink) !important;
+  border-radius: 10px;
+  padding-inline: 10px;
+  box-shadow: inset 0 1px 0 var(--agy-highlight), 0 0 0 1px var(--agy-frame);
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="pane-titlebar-toolbar"]:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  padding: 2px 6px;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="title-menu-bar"], [data-testid="title-menu-bar-item"], [data-testid="conversation-row-sidebar"], [data-markdown-root]),
+body[data-agy-we-glass="on"] #root [data-markdown-root] :is(p, li, h1, h2, h3, h4, h5, h6, strong, b, td, th, blockquote) {
+  color: var(--agy-ink) !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-testid="conversation-row-sidebar"] :is(time, small, .text-muted-foreground), [data-testid="worked-for-collapsible"], [data-subtext]) {
+  color: var(--agy-muted-ink) !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-selected="true"], [data-active="true"], [data-active="1"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: rgb(var(--agy-tone) / min(0.88, calc(var(--agy-glass-sidebar-alpha) + 0.24))) !important;
+  box-shadow: inset 0 0 0 1px var(--agy-frame);
+}
+
+body[data-agy-we-glass="on"] [data-radix-popper-content-wrapper] {
+  z-index: 110 !important;
+}
+
+body[data-agy-we-glass="on"] :is([role="dialog"], .agy-dialog):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: rgb(var(--agy-tone) / 0.95) !important;
+  color: var(--agy-ink) !important;
+  backdrop-filter: blur(max(22px, calc(var(--agy-glass-blur) * 1.5))) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(max(22px, calc(var(--agy-glass-blur) * 1.5))) saturate(175%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--agy-highlight),
+    0 0 0 1px var(--agy-popup-edge),
+    0 20px 60px -16px rgb(10 18 36 / 0.45);
+}
+
+body[data-agy-we-glass="on"] :is([role="dialog"], .agy-dialog) .bg-background {
+  background-color: transparent !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([role="dialog"], .agy-dialog) .bg-sidebar:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] :is([role="dialog"], .agy-dialog) div.bg-sidebar:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: rgb(var(--agy-tone) / 0.24) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-right: 1px solid var(--agy-frame);
+}
+
+body[data-agy-we-glass="on"] .bg-popover:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-popup) !important;
+  color: var(--agy-ink) !important;
+}
+
+body[data-agy-we-glass="on"] #root :is([data-browser-occluder="true"], [data-testid="title-menu-bar"] .surface-opaque):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)),
+body[data-agy-we-glass="on"] :is([data-radix-menu-content], [data-select-popup], [role="menu"], [role="listbox"], [role="tooltip"], .agy-overlay, .agy-fastpick, [data-browser-occluder="true"]):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: var(--agy-popup) !important;
+  color: var(--agy-ink) !important;
+  border-color: var(--agy-popup-edge);
+  backdrop-filter: blur(max(16px, var(--agy-glass-blur))) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(max(16px, var(--agy-glass-blur))) saturate(175%) !important;
+  box-shadow: inset 0 1px 0 var(--agy-highlight), 0 0 0 1px var(--agy-popup-edge), 0 12px 32px -8px rgb(10 18 36 / 0.44);
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell {
+  --shell-canvas: transparent !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] .browser-hole-opaque:not([data-has-browser-hole="true"]),
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-tiling-pane],
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-pane-id],
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-tiling-pane] > [data-pane-id] > :first-child,
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-split-sash],
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-splitter-band] {
+  background-color: transparent !important; background-image: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .browser-hole-ancestor[data-has-browser-hole="true"] > :not([data-has-browser-hole="true"], [data-browser-hole], .absolute, .fixed) {
+  background-color: transparent !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-side-panel-body][data-has-browser-hole="true"],
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-main-content-header]:not([data-has-browser-hole="true"]) {
+  background-color: transparent !important; box-shadow: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-side-panel-strip]:not([data-has-browser-hole="true"]),
+body[data-agy-we-glass="on"] #root [data-testid="builtin-browser-pane"] > :first-child:not([data-has-browser-hole="true"]) {
+  background-color: var(--agy-sidebar-bg) !important; box-shadow: none !important; color: var(--agy-ink);
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell .agy-sheet[data-sheet-inset] [data-main-content-body] > [data-testid="bottom-terminal-panel"]:not([data-has-browser-hole="true"]) {
+  background-color: var(--agy-card-bg) !important;
+}
+
+body[data-agy-we-glass="on"] #root [data-browser-hole="true"],
+body[data-agy-we-glass="on"] #root [data-browser-hole="true"] *,
+body[data-agy-we-glass="on"] #root [data-side-panel-body][data-has-browser-hole="true"],
+body[data-agy-we-glass="on"] #root [data-main-content-body][data-has-browser-hole="true"],
+body[data-agy-we-glass="on"] #root [data-pane-id][data-has-browser-hole="true"] {
+  background-color: transparent !important; background-image: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .agy-inset-shell > [data-split-root] > [data-split-sash] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+body[data-agy-we-glass="on"] #root .browser-hole-opaque:not([data-has-browser-hole="true"]),
+body[data-agy-we-glass="on"] #root [data-tiling-pane]:not([data-has-browser-hole="true"]),
+body[data-agy-we-glass="on"] #root [data-pane-id]:not([data-has-browser-hole="true"]),
+body[data-agy-we-glass="on"] #root [data-split-sash],
+body[data-agy-we-glass="on"] #root [data-splitter-band] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
