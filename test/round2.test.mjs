@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { once } from 'node:events';
+import { getEventListeners, once } from 'node:events';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
@@ -107,6 +107,36 @@ test('WebWallGL host routes serve the global bundle and one packed/loose/global 
   }
   assert.equal((await request(root + 'assets/%2F../project.json')).status, 403);
   assert.equal((await request(root + 'materials/missing.tex')).status, 404);
+});
+
+test('only static previews and scene archives receive the media cache policy', async (t) => {
+  const { request, dir, pkg } = await fixture(t);
+  await save(join(dir, '431960', '123', 'preview.png'), 'preview');
+  const preview = `/media/preview/${encodedId}`;
+  const sceneRoot = `/media/scene-root/${encodedId}/`;
+  const policy = 'private, max-age=300';
+  for (const path of [preview, sceneRoot + 'scene.pkg', sceneRoot + 'custom.mpkg', `/media/file/${encodedId}/custom.mpkg`]) {
+    const response = await request(path, { method: 'HEAD' });
+    assert.equal(response.status, 200, path);
+    assert.equal(response.headers.get('cache-control'), policy, path);
+    assert.equal(await response.text(), '');
+  }
+  const range = await request(sceneRoot + 'scene.pkg', { headers: { Range: 'bytes=0-7' } });
+  assert.equal(range.status, 206);
+  assert.equal(range.headers.get('cache-control'), policy);
+  assert.equal(range.headers.get('content-range'), `bytes 0-7/${pkg.length}`);
+  assert.deepEqual(Buffer.from(await range.arrayBuffer()), pkg.subarray(0, 8));
+  for (const [path, status, init] of [
+    ['/api/settings', 200],
+    [sceneRoot + 'nested/scene.json', 200],
+    ['/media/preview/missing', 404],
+    [preview, 416, { headers: { Range: 'bytes=100-' } }],
+  ]) {
+    const response = await request(path, init);
+    assert.equal(response.status, status, path);
+    assert.equal(response.headers.get('cache-control'), null, path);
+    await response.text();
+  }
 });
 
 function dispatch(target, type, fields = {}) {
@@ -259,6 +289,84 @@ test('background trusts only its renderer and falls back from an error or timeou
   assert.deepEqual(document.head.children, []);
 });
 
+test('background keeps the preview visible and removes only its own software-rendered scene', () => {
+  const { context, window, document, timers } = runtimeHost();
+  runInContext(runtime, context);
+  const api = window.__agyWeBg;
+  api.update(payload());
+  const [root] = document.body.children;
+  const [content] = root.children;
+  const [preview, frame] = content.children;
+  dispatch(preview, 'load');
+  const data = { source: 'agy-we-renderer', event: 'software-renderer', renderer: 'SwiftShader' };
+  dispatch(window, 'message', { data, source: {}, origin: baseUrl });
+  dispatch(window, 'message', { data, source: frame.contentWindow, origin: mainUrl });
+  assert.equal(api.getState().mode, 'scene-loading');
+  dispatch(window, 'message', { data, source: frame.contentWindow, origin: baseUrl });
+  assert.equal(api.getState().mode, 'preview');
+  assert.equal(api.getState().error, '软件渲染省电模式');
+  assert.deepEqual(content.children, [preview]);
+  assert.equal(preview.style.opacity, '1');
+  assert.ok(root.attributes.has('data-visible'));
+  assert.equal(timers.size, 0);
+  api.update(payload('scene', { fpsLimit: 60 }));
+  assert.deepEqual(content.children, [preview]);
+  api.destroy();
+});
+
+test('window focus changes scene FPS without overriding scroll or visibility pauses', () => {
+  const { context, window, document, timers } = runtimeHost();
+  document.hasFocus = () => false;
+  runInContext(runtime, context);
+  const api = window.__agyWeBg;
+  api.update(payload('scene', { fpsLimit: 30 }));
+  const frame = document.body.children[0].children[0].children[1];
+  const config = () => frame.messages.findLast(({ data }) => data.action === 'setConfig').data.config;
+  const action = () => frame.messages.at(-1).data.action;
+  assert.equal(new URL(frame.src).searchParams.get('fps'), '5');
+  dispatch(window, 'message', {
+    source: frame.contentWindow, origin: baseUrl, data: { source: 'agy-we-renderer', event: 'ready' },
+  });
+  assert.equal(config().fps, 5);
+  dispatch(window, 'focus');
+  assert.equal(config().fps, 30);
+  dispatch(window, 'scroll');
+  assert.equal(action(), 'pause');
+  dispatch(window, 'blur');
+  assert.equal(config().fps, 5);
+  api.update(payload('scene', { fpsLimit: 3 }));
+  assert.equal(config().fps, 3);
+  assert.equal(action(), 'pause');
+  api.update(payload('scene', { fpsLimit: 24 }));
+  dispatch(window, 'focus');
+  assert.equal(config().fps, 24);
+  assert.ok(!frame.messages.slice(frame.messages.findLastIndex(({ data }) => data.action === 'pause') + 1)
+    .some(({ data }) => data.action === 'resume'));
+
+  function endScroll() {
+    const [token, timer] = timers.entries().next().value;
+    assert.equal(timer.timeout, 160);
+    timers.delete(token);
+    timer.callback();
+  }
+  endScroll();
+  assert.equal(action(), 'resume');
+  dispatch(window, 'scroll');
+  document.visibilityState = 'hidden';
+  dispatch(document, 'visibilitychange');
+  endScroll();
+  assert.equal(action(), 'pause');
+  document.visibilityState = 'visible';
+  dispatch(document, 'visibilitychange');
+  assert.equal(action(), 'resume');
+  dispatch(window, 'scroll');
+  api.destroy();
+  assert.equal(timers.size, 0);
+  for (const event of ['focus', 'blur', 'scroll', 'message']) {
+    assert.equal(getEventListeners(window, event).length, 0, event);
+  }
+});
+
 test('background creates image, video and sandboxed web nodes and preserves its single root', () => {
   const { context, window, document, app } = runtimeHost();
   runInContext(runtime, context);
@@ -399,6 +507,9 @@ test('renderer uses httpSource, reports first frame and stats, and accepts only 
   control('pause');
   control('setConfig', { fps: 24, fit: 'contain', volume: 0.6, muted: false });
   assert.deepEqual(calls.slice(-4), [['pause'], ['setFit', 'contain'], ['setFps', 24], ['setVolume', 0.6]]);
+  const beforeFpsChange = calls.length;
+  control('setConfig', { fps: 5 });
+  assert.deepEqual(calls.slice(beforeFpsChange), [['setFps', 5]]);
   timers.get(1)();
   assert.equal(messages.at(-1).data.fps, 24);
   scene.fail(new Error('no WebGL context'));

@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?logo=windows&logoColor=white)](#三步上手)
-[![Tests](https://img.shields.io/badge/Tests-64%20passed-brightgreen)](#常用命令)
+[![Tests](https://img.shields.io/badge/Tests-69%20passed-brightgreen)](#常用命令)
 
 **简体中文** · [English](./README.en.md)
 
@@ -143,7 +143,7 @@ node install.mjs install
 | `node install.mjs stop` | 停止服务并立即还原 Antigravity 原生界面 |
 | `node install.mjs shortcut` | 单独重新生成或修复 `Antigravity (CDP)` 快捷方式 |
 | `node install.mjs uninstall` | 停止服务并取消开机自启（**保留**你的配置和已导入的壁纸） |
-| `npm test` | 运行全部 64 项自动化测试 |
+| `npm test` | 运行全部 69 项自动化测试 |
 
 ---
 

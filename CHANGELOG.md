@@ -5,6 +5,17 @@ All notable changes to **agy-wallpaper-engine** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-11-24
+
+Zero-visual-compromise rendering, GPU power, and main-thread performance update.
+
+### Performance & Reliability
+- **Eliminated `MutationObserver` full-tree churn**: `watchBrowserHoles` in `src/bg-runtime.js` and `src/picker-ui.js` no longer listens to high-frequency `class`/`style` mutations across `document.body`; scroll listeners now use `{ capture: true, passive: true }` and skip geometry scans when no split-pane browser holes exist.
+- **WebGL2 MSAA disabled & automatic software-renderer protection**: `src/webwallgl-host/renderer.js` forces `antialias: false` on WebGL2 scene contexts to save GPU memory bandwidth, detects software renderers (`Microsoft Basic Render Driver` / `SwiftShader` / `llvmpipe`), and automatically falls back to the high-resolution preview with a console status notice instead of stalling the UI.
+- **Smart unfocus FPS throttling & scroll-pause**: `src/bg-runtime.js` automatically throttles WebGL2 scene rendering down to `5 FPS` (cutting background GPU load by ~83%) when Antigravity loses focus, restores the configured FPS immediately on focus, and silently pauses scene frame submission during active scrolling without altering Liquid Glass blur.
+- **Loopback static asset caching**: `src/media-server.mjs` adds `Cache-Control: private, max-age=300` to preview images and read-only `scene.pkg` responses while preserving `HEAD` and HTTP `Range 206` behavior.
+- **Expanded automated test suite**: increased from 64 to **69** cross-platform tests (`npm test`), verifying blur/focus FPS handoff, software-renderer fallback, scroll/observer cleanup, and cache headers.
+
 ## [1.0.0] - 2026-11-24
 
 Initial public release of **agy-wallpaper-engine** — a zero-invasion local Wallpaper Engine runtime and iOS Liquid Glass theme engine for Google Antigravity Desktop on Windows.

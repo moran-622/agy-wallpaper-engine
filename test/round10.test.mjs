@@ -144,8 +144,8 @@ test('schema-invalid JSON is backed up and settings recover with sanitized hidde
 });
 
 for (const [script, name, expectedVersion, previousVersion] of [
-  ['bg-runtime.js', '__agyWeBg', '2026.11.r10', '2026.11.r9'],
-  ['picker-ui.js', '__agyWePicker', '2026.11.r11b', '2026.11.r11'],
+  ['bg-runtime.js', '__agyWeBg', '2026.11.r13', '2026.11.r12b'],
+  ['picker-ui.js', '__agyWePicker', '2026.11.r13', '2026.11.r12'],
 ]) {
   test(`${script} replaces legacy versions and makes same-version injection idempotent`, async () => {
     const code = await readFile(new URL('../src/' + script, import.meta.url), 'utf8');

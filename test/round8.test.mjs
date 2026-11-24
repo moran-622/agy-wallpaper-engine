@@ -181,13 +181,43 @@ test('Round 8 patches only the actual scene canvas and wraps a WebGL2 context on
   assert.equal(canvas.getContext('2d'), context2d);
   assert.equal(context2d.drawArrays, draw2d);
   assert.equal(canvas.getContext('webgl'), null);
-  const options = { alpha: false };
+  const options = Object.freeze({ alpha: false, antialias: true });
   assert.equal(canvas.getContext('webgl2', options), gl);
-  assert.deepEqual(calls.at(-1), ['webgl2', options]);
+  assert.deepEqual([calls.at(-1)[0], { ...calls.at(-1)[1] }], ['webgl2', { alpha: false, antialias: false }]);
   const wrapped = gl.uniform1i;
   assert.equal(canvas.getContext('webgl2'), gl);
+  assert.deepEqual({ ...calls.at(-1)[1] }, { antialias: false });
   assert.equal(gl.uniform1i, wrapped);
   instance.dispose();
+});
+
+test('renderer reports known software backends once using debug info or the standard renderer', () => {
+  for (const [unmasked, standard, isSoftware] of [
+    ['ANGLE (Microsoft Basic Render Driver)', 'WebKit WebGL', true],
+    ['ANGLE (Vulkan, SwiftShader Device)', 'WebKit WebGL', true],
+    [undefined, 'llvmpipe (LLVM 20.1.8)', true],
+    ['ANGLE (Intel UHD Graphics)', 'WebKit WebGL', false],
+  ]) {
+    const { gl } = mockGl();
+    const unmaskedRenderer = 0x9246;
+    gl.RENDERER = 0x1f01;
+    const queried = [];
+    gl.getExtension = (name) => {
+      assert.equal(name, 'WEBGL_debug_renderer_info');
+      return unmasked ? { UNMASKED_RENDERER_WEBGL: unmaskedRenderer } : null;
+    };
+    gl.getParameter = (key) => {
+      queried.push(key);
+      return key === unmaskedRenderer ? unmasked : standard;
+    };
+    const canvas = { getContext: () => gl };
+    const instance = startRenderer(canvas);
+    canvas.getContext('webgl2');
+    canvas.getContext('webgl2');
+    assert.deepEqual(queried, [unmasked ? unmaskedRenderer : gl.RENDERER]);
+    assert.deepEqual(instance.messages, isSoftware ? ['software-renderer'] : []);
+    instance.dispose();
+  }
 });
 
 test('Round 8 permits a scene mock without getContext', async () => {

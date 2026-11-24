@@ -1,5 +1,5 @@
 (() => {
-  const PICKER_VERSION = '2026.11.r11b';
+  const PICKER_VERSION = '2026.11.r13';
   const previous = window.__agyWePicker;
   if (previous?.version === PICKER_VERSION) return;
   try { previous?.destroy?.(); } catch {}
@@ -152,9 +152,12 @@
     }) : null;
     mutation?.observe(document.body, { subtree: true, childList: true, attributes: true,
       attributeFilter: ['data-browser-hole', 'data-has-browser-hole', 'data-has-drawer-browser-hole',
-        'data-has-three-layer-browser-hole', 'class', 'style', 'hidden'] });
+        'data-has-three-layer-browser-hole', 'hidden'] });
+    function onScroll() {
+      if (observed.length > 1) schedule();
+    }
     window.addEventListener?.('resize', schedule);
-    window.addEventListener?.('scroll', schedule, { capture: true });
+    window.addEventListener?.('scroll', onScroll, { capture: true, passive: true });
     sync();
     return () => {
       stopped = true;
@@ -164,7 +167,7 @@
       frame = undefined;
       observed = [];
       window.removeEventListener?.('resize', schedule);
-      window.removeEventListener?.('scroll', schedule, { capture: true });
+      window.removeEventListener?.('scroll', onScroll, { capture: true });
     };
   }
 
@@ -211,7 +214,7 @@
     const modes = { scene: state.stats?.fps ? 'WebGL ' + Math.round(state.stats.fps) + ' FPS' : 'WebGL',
       video: '视频', 'embedded-video': '内嵌视频', image: '图片', web: '网页', preview: '已降级预览',
       idle: settings().enabled ? '请选择壁纸' : '壁纸已关闭', unavailable: '壁纸不可用' };
-    const message = notice || modes[state.mode] || '正在加载壁纸…';
+    const message = notice || (state.error === '软件渲染省电模式' ? state.error : modes[state.mode]) || '正在加载壁纸…';
     if (status.textContent !== message) status.textContent = message;
   }
   function flush() {

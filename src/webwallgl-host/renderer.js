@@ -6,6 +6,7 @@
   let statsTimer;
   let ready = false;
   let paused = false;
+  let checkedRenderer = false;
   const config = {
     fit: 'cover',
     fps: 30,
@@ -124,7 +125,17 @@
     patchedCanvases.add(canvas);
     const getContext = canvas.getContext;
     canvas.getContext = function (type, ...args) {
+      if (type === 'webgl2') args[0] = { ...args[0], antialias: false };
       const gl = getContext.call(this, type, ...args);
+      if (gl && type === 'webgl2' && !checkedRenderer) {
+        checkedRenderer = true;
+        const debugInfo = gl.getExtension?.('WEBGL_debug_renderer_info');
+        const renderer = (debugInfo && gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL))
+          || gl.getParameter?.(gl.RENDERER);
+        if (/Microsoft Basic Render Driver|SwiftShader|llvmpipe/i.test(renderer)) {
+          report('software-renderer', { renderer });
+        }
+      }
       if (gl && (type === 'webgl2' || (typeof gl.R8 === 'number' && typeof gl.RG8 === 'number'))) {
         patchParticleAlbedo(gl);
       }
@@ -146,14 +157,17 @@
   }
 
   function setConfig(patch) {
-    if (['cover', 'contain', 'stretch'].includes(patch.fit)) config.fit = patch.fit;
-    if (Number.isFinite(patch.fps)) config.fps = Math.max(1, Math.min(120, patch.fps));
+    const fit = ['cover', 'contain', 'stretch'].includes(patch.fit);
+    const fps = Number.isFinite(patch.fps);
+    const audio = Number.isFinite(patch.volume) || typeof patch.muted === 'boolean';
+    if (fit) config.fit = patch.fit;
+    if (fps) config.fps = Math.max(1, Math.min(120, patch.fps));
     if (Number.isFinite(patch.volume)) config.volume = Math.max(0, Math.min(1, patch.volume));
     if (typeof patch.muted === 'boolean') config.muted = patch.muted;
     if (ready) {
-      scene.setFit(config.fit);
-      scene.setFps(config.fps);
-      scene.setVolume(config.muted ? 0 : config.volume);
+      if (fit) scene.setFit(config.fit);
+      if (fps) scene.setFps(config.fps);
+      if (audio) scene.setVolume(config.muted ? 0 : config.volume);
     }
   }
 

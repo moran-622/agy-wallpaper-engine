@@ -11,7 +11,7 @@ Zero patching of Antigravity's install folder · Survives app updates · Silent 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?logo=windows&logoColor=white)](#quick-start)
-[![Tests](https://img.shields.io/badge/Tests-64%20passed-brightgreen)](#cli-commands)
+[![Tests](https://img.shields.io/badge/Tests-69%20passed-brightgreen)](#cli-commands)
 
 [简体中文](./README.md) · **English**
 
@@ -143,7 +143,7 @@ Click the floating wallpaper icon on the right edge—or press **`Alt+Shift+W`**
 | `node install.mjs stop` | Stop daemon and immediately restore Antigravity's native UI |
 | `node install.mjs shortcut` | Create or refresh the `Antigravity (CDP)` Start Menu shortcut |
 | `node install.mjs uninstall` | Stop daemon and remove autostart (**keeps** your settings & uploads) |
-| `npm test` | Run all 64 automated unit & integration tests |
+| `npm test` | Run all 69 automated unit & integration tests |
 
 ---
 

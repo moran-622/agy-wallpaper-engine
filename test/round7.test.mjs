@@ -50,7 +50,7 @@ function page({ observers = true, raf = true } = {}) {
   const observer = list => class {
     targets = new Set();
     constructor(callback) { this.callback = callback; list.push(this); }
-    observe(node) { this.targets.add(node); }
+    observe(node, options) { this.targets.add(node); this.options = options; }
     disconnect() { this.targets.clear(); }
   };
   if (observers) {
@@ -76,7 +76,7 @@ function page({ observers = true, raf = true } = {}) {
     assertClean() {
       assert.equal(frames.size, 0); assert.equal(timers.size, 0);
       for (const ob of [...mutations, ...resizes]) assert.equal(ob.targets.size, 0);
-      for (const name of ['resize','scroll','keydown','message'])
+      for (const name of ['resize','scroll','keydown','message','focus','blur'])
         assert.equal(getEventListeners(window, name).length, 0, name);
       assert.equal(getEventListeners(document, 'visibilitychange').length, 0);
     }};
@@ -126,6 +126,39 @@ test('Round 7 overlapping holes stay transparent under evenodd', () => {
   const root = p.document.body.find(n => n.id === 'agy-we-bg-root');
   assert.match(root.style.clipPath, /M200 100 H300 V400 H200 Z/);
   p.window.__agyWeBg.destroy(); p.assertClean();
+});
+
+test('hole watchers ignore class and style churn and schedule scroll geometry only with holes', () => {
+  const p = page();
+  const scrollOptions = [];
+  const addEventListener = p.window.addEventListener.bind(p.window);
+  p.window.addEventListener = (type, listener, options) => {
+    if (type === 'scroll') scrollOptions.push({ ...options });
+    addEventListener(type, listener, options);
+  };
+  runInContext(background, p.context); runInContext(picker, p.context);
+  p.window.__agyWeBg.update(p.payload);
+  p.window.__agyWePicker.mount(p.payload);
+  assert.equal(scrollOptions.length, 3);
+  for (const options of scrollOptions) assert.deepEqual(options, { capture: true, passive: true });
+  for (const { options } of p.mutations) {
+    assert.equal(options.subtree, true);
+    assert.equal(options.childList, true);
+    assert.equal(options.attributes, true);
+    assert.deepEqual([...options.attributeFilter], ['data-browser-hole', 'data-has-browser-hole',
+      'data-has-drawer-browser-hole', 'data-has-three-layer-browser-hole', 'hidden']);
+  }
+
+  const scroll = () => p.window.dispatchEvent(new Event('scroll'));
+  scroll(); assert.equal(p.frames.size, 0);
+  p.setHoles([hole()]); p.mutate(); p.flush();
+  p.setHoles([hole(850)]);
+  scroll(); scroll(); assert.equal(p.frames.size, 2); p.flush();
+  assert.match(p.document.body.find(n => n.id === 'agy-we-bg-root').style.clipPath, /M850 115/);
+  assert.equal(p.document.body.find(n => n.id === 'agy-we-picker-host').style['--agy-hole-left'], '850px');
+  p.setHoles([]); p.mutate(); p.flush();
+  scroll(); assert.equal(p.frames.size, 0);
+  p.window.__agyWePicker.destroy(); p.window.__agyWeBg.destroy(); p.assertClean();
 });
 
 test('Round 7 picker moves all controls out of right browser and restores drag preference', () => {

@@ -243,7 +243,7 @@ function byteRange(header, size) {
   return start < size && start <= end ? { start, end } : null;
 }
 
-async function servePayload(request, response, name, payload) {
+async function servePayload(request, response, name, payload, cacheControl) {
   const { size } = payload;
   const range = request.headers.range;
   response.setHeader('Accept-Ranges', 'bytes');
@@ -260,6 +260,7 @@ async function servePayload(request, response, name, payload) {
     'X-Content-Type-Options': 'nosniff',
   };
   const partial = range !== undefined;
+  if (cacheControl) headers['Cache-Control'] = cacheControl;
   if (partial) headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
   if (['.html', '.htm', '.svg'].includes(extension) && !response.hasHeader('Content-Security-Policy')) {
     headers['Content-Security-Policy'] = "sandbox; default-src 'none'";
@@ -269,7 +270,9 @@ async function servePayload(request, response, name, payload) {
   else await pipeline(payload.stream(start, end), response);
 }
 
-async function serveFile(request, response, file) {
+const staticMediaCache = 'private, max-age=300';
+
+async function serveFile(request, response, file, cacheControl) {
   if (!file) return notFound();
   const handle = await open(file, 'r');
   try {
@@ -277,7 +280,7 @@ async function serveFile(request, response, file) {
     await servePayload(request, response, file, {
       size,
       stream: (start, end) => handle.createReadStream({ start, end, autoClose: false }),
-    });
+    }, cacheControl);
   } finally {
     await handle.close();
   }
@@ -375,7 +378,7 @@ async function serveSceneRoot(request, response, item, path, assetsDir) {
     return json(response, 200, { ...project, type: 'scene', file: entryJsonPath });
   }
   if (path === 'scene.pkg' || path === item.pkgFile) {
-    return serveFile(request, response, await safeFile(item.dir, item.pkgFile));
+    return serveFile(request, response, await safeFile(item.dir, item.pkgFile), staticMediaCache);
   }
   return sceneFile(request, response, item, path, assetsDir);
 }
@@ -583,8 +586,7 @@ export async function createMediaServer(options = {}) {
     const { item, previewFile } = record;
     if (kind === 'preview') {
       if (rawPath !== undefined) return notFound();
-      response.setHeader('Cache-Control', 'public, max-age=300');
-      return serveFile(request, response, await safeFile(item.dir, previewFile));
+      return serveFile(request, response, await safeFile(item.dir, previewFile), staticMediaCache);
     }
     if (!rawPath) return notFound();
     const rel = requestPath(rawPath);
@@ -602,7 +604,8 @@ export async function createMediaServer(options = {}) {
         "form-action 'none'", "frame-src 'none'", "object-src 'none'", "base-uri 'none'",
       ].join('; '));
     }
-    return serveFile(request, response, file);
+    const cacheControl = item.type === 'scene' && rel === item.pkgFile ? staticMediaCache : undefined;
+    return serveFile(request, response, file, cacheControl);
   }
 
   const server = createServer((request, response) => {

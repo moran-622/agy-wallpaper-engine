@@ -1,5 +1,5 @@
 (() => {
-  const RUNTIME_VERSION = '2026.11.r10';
+  const RUNTIME_VERSION = '2026.11.r13';
   const previous = window.__agyWeBg;
   if (previous?.version === RUNTIME_VERSION) return;
   try { previous?.destroy?.(); } catch {}
@@ -67,9 +67,12 @@
     }) : null;
     mutation?.observe(document.body, { subtree: true, childList: true, attributes: true,
       attributeFilter: ['data-browser-hole', 'data-has-browser-hole', 'data-has-drawer-browser-hole',
-        'data-has-three-layer-browser-hole', 'class', 'style', 'hidden'] });
+        'data-has-three-layer-browser-hole', 'hidden'] });
+    function onScroll() {
+      if (observed.length > 1) schedule();
+    }
     window.addEventListener?.('resize', schedule);
-    window.addEventListener?.('scroll', schedule, { capture: true });
+    window.addEventListener?.('scroll', onScroll, { capture: true, passive: true });
     sync();
     return () => {
       stopped = true;
@@ -79,11 +82,34 @@
       frame = undefined;
       observed = [];
       window.removeEventListener?.('resize', schedule);
-      window.removeEventListener?.('scroll', schedule, { capture: true });
+      window.removeEventListener?.('scroll', onScroll, { capture: true });
     };
   }
 
   let stopHoles;
+  let scrollPauseTimer;
+  let scrollPaused = false;
+  let windowFocused = true;
+  function onAnyScroll() {
+    if (!layer || layer.kind !== 'scene') return;
+    if (!scrollPaused) {
+      scrollPaused = true;
+      sceneMessage(layer, 'pause');
+    }
+    clearTimeout(scrollPauseTimer);
+    scrollPauseTimer = setTimeout(() => {
+      scrollPauseTimer = undefined;
+      scrollPaused = false;
+      syncPlayback();
+    }, 160);
+  }
+  function stopScrollBoost() {
+    window.removeEventListener?.('scroll', onAnyScroll, { capture: true });
+    clearTimeout(scrollPauseTimer);
+    scrollPauseTimer = undefined;
+    scrollPaused = false;
+    document.body?.removeAttribute('data-agy-we-scrolling');
+  }
   let layer;
   let outgoing;
   let fadeTimer;
@@ -298,12 +324,15 @@
   function unmount() {
     stopHoles?.();
     stopHoles = undefined;
+    stopScrollBoost();
     clearTheme();
     stopRotation();
     const previous = layer;
     layer = undefined;
     if (!previous) return;
     window.removeEventListener('message', onRendererMessage);
+    window.removeEventListener('blur', syncFocus);
+    window.removeEventListener('focus', syncFocus);
     document.removeEventListener('visibilitychange', syncPlayback);
     releaseOutgoing();
     discardArtwork(previous);
@@ -403,6 +432,15 @@
     current.media?.contentWindow?.postMessage({ source: 'agy-we-bg', action, config }, current.base.origin);
   }
 
+  function sceneFps({ fps }) {
+    return windowFocused ? fps : Math.min(fps, 5);
+  }
+
+  function syncFocus(event) {
+    windowFocused = event.type === 'focus';
+    if (layer?.kind === 'scene') sceneMessage(layer, 'setConfig', { fps: sceneFps(layer.config) });
+  }
+
   function syncPlayback() {
     if (!layer) return;
     const paused = layer.config.pauseOnHidden && document.visibilityState === 'hidden';
@@ -412,7 +450,7 @@
       if (paused) video.pause();
       else if (video.paused) void video.play().catch(() => {});
     } else if (layer.kind === 'scene') {
-      sceneMessage(layer, paused ? 'pause' : 'resume');
+      sceneMessage(layer, paused || scrollPaused ? 'pause' : 'resume');
       if (state.mode === 'scene-loading') {
         if (paused) disarm(layer);
         else if (layer.timer === undefined) {
@@ -433,8 +471,8 @@
     if (preview) preview.style.objectFit = fit;
     if (media) media.style.objectFit = fit;
     if (current.kind === 'scene') {
-      const { fps, fit, volume, muted } = config;
-      sceneMessage(current, 'setConfig', { fps, fit, volume, muted });
+      const { fit, volume, muted } = config;
+      sceneMessage(current, 'setConfig', { fps: sceneFps(config), fit, volume, muted });
     } else if (current.kind === 'video') {
       media.muted = config.muted;
       media.volume = config.volume;
@@ -451,6 +489,8 @@
       disarm(current);
       showMedia(current, current.media, 'scene');
       applyConfig(current);
+    } else if (event.data.event === 'software-renderer') {
+      fallback(current, '软件渲染省电模式', !current.preview);
     } else if (event.data.event === 'error') {
       const reason = typeof event.data.message === 'string' ? event.data.message : 'Scene renderer failed';
       fallback(current, reason, true);
@@ -517,8 +557,12 @@
         if (root.style.clipPath !== clip) root.style.clipPath = clip;
       });
       document.head.append(style);
+      windowFocused = document.hasFocus?.() ?? true;
       document.addEventListener('visibilitychange', syncPlayback);
       window.addEventListener('message', onRendererMessage);
+      window.addEventListener('blur', syncFocus);
+      window.addEventListener('focus', syncFocus);
+      window.addEventListener?.('scroll', onAnyScroll, { capture: true, passive: true });
     }
     const current = { root, content, dim, style, base, key, config, embedded };
     layer = current;
@@ -531,7 +575,7 @@
       const source = new URL('/webwallgl/index.html', base);
       source.search = new URLSearchParams({
         id: settings.activeId, parentOrigin: location.origin,
-        fps: config.fps, fit: config.fit, volume: config.volume, muted: config.muted,
+        fps: sceneFps(config), fit: config.fit, volume: config.volume, muted: config.muted,
       }).toString();
       mountFrame(current, 'scene', source.href);
     } else if (wallpaper.type === 'video' && url) {
