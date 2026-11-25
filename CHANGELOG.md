@@ -5,6 +5,15 @@ All notable changes to **agy-wallpaper-engine** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-11-25
+
+Liquid Glass layout & visual polish patch.
+
+### Fixed & Improved
+- **Queued message & working indicator layout**: narrowed `[data-testid="agent-response"] + div` to `[data-testid="agent-response"] + div[data-testid="agent-loading"]` and added `[data-testid="agent-loading"]` to the compact status-pill selector so `[data-testid="pending-user-messages"]` (queued user bubbles + nested "Working" footer) is never crushed to `width: fit-content` or wrapped in a vertical strip.
+- **Empty agent response placeholder**: suppressed glass card padding, border, shadow, and backdrop blur on `[data-testid="agent-response"]` when it has no visible content yet (`:empty` or only `.sr-only` / empty step containers), eliminating the blank rounded pill bar before output streams in.
+- **Frameless soft-glow response action bar**: made `[data-testid="agent-response"] + fieldset` frameless with soft-glow text/icon halos for clear legibility over any wallpaper without extra card clutter.
+
 ## [1.1.0] - 2026-11-24
 
 Zero-visual-compromise rendering, GPU power, and main-thread performance update.

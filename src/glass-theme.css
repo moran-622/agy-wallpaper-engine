@@ -193,6 +193,21 @@ body[data-agy-we-glass="on"] #root [data-testid="agent-response"]:not(:where(
   transform: translateZ(0);
 }
 
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"]:is(:empty, :has(> *):not(:has(> :not(.sr-only):not(:empty)))):not(:where(
+  [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin-block: 0 !important;
+  contain: none;
+  transform: none;
+}
+
 body[data-agy-we-glass="on"] #root :is([data-testid="agent-response"], .agy-card, [data-side-panel-body]) .md-table-host:not(:where(
   [data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout,
   [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
@@ -312,11 +327,11 @@ body[data-agy-we-glass="on"] #root [data-testid="agent-response"] :not(pre) > co
   padding: 0.1em 0.35em;
 }
 
-body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + div:not(:where(
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + div[data-testid="agent-loading"]:not(:where(
   :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
   [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
 )),
-body[data-agy-we-glass="on"] #root :is([data-testid="agent-working"], [data-testid="working-indicator"], [data-testid="worked-for-collapsible"]):not(:where(
+body[data-agy-we-glass="on"] #root :is([data-testid="agent-loading"], [data-testid="agent-working"], [data-testid="working-indicator"], [data-testid="worked-for-collapsible"]):not(:where(
   [data-testid="agent-response"] *,
   :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
   [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
@@ -328,6 +343,28 @@ body[data-agy-we-glass="on"] #root :is([data-testid="agent-working"], [data-test
   color: var(--agy-muted-ink) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + fieldset:not(:where(
+  :is([data-has-browser-hole="true"], [data-has-drawer-browser-hole="true"], [data-has-three-layer-browser-hole="true"], #ag-ui-widgets, #agy-capsule-native-layout),
+  [data-browser-hole="true"], [data-browser-hole="true"] *, #ag-ui-widgets *, #agy-capsule-native-layout *
+)) {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + fieldset :is(button, span, time) {
+  color: var(--agy-ink) !important;
+  text-shadow:
+    0 0 8px rgb(var(--agy-tone) / 0.96),
+    0 0 3px rgb(var(--agy-tone) / 0.98),
+    0 1px 2px rgb(var(--agy-tone) / 0.9);
+}
+
+body[data-agy-we-glass="on"] #root [data-testid="agent-response"] + fieldset svg {
+  color: var(--agy-ink) !important;
+  filter: drop-shadow(0 0 2.5px rgb(var(--agy-tone) / 0.96)) drop-shadow(0 0 6px rgb(var(--agy-tone) / 0.85));
 }
 
 body[data-agy-we-glass="on"] #root .bg-card:not(:where(

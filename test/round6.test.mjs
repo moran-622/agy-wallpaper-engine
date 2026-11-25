@@ -15,7 +15,13 @@ test('glass shell fixes keep the wallpaper clear and inner surfaces unblurred', 
   assert.match(declarations('div:has([data-testid="title-menu-bar"])'), /z-index: 90 !important/);
   assert.match(declarations(':is([role="dialog"], .agy-dialog) div.bg-sidebar'), /\/ 0\.24\).*backdrop-filter: none/s);
   assert.match(declarations('[data-testid="pane-titlebar-toolbar"]'), /background-color: var\(--agy-composer-bg\)/);
-  assert.match(declarations('[data-testid="agent-response"] + div'), /width: fit-content.*backdrop-filter: none/s);
+  assert.match(declarations('[data-testid="agent-response"] + div[data-testid="agent-loading"]'), /width: fit-content.*backdrop-filter: none/s);
+  assert.doesNotMatch(css, /\[data-testid="agent-response"\]\s*\+\s*div:not\(/);
+  assert.match(declarations('[data-testid="agent-loading"]'), /width: fit-content.*backdrop-filter: none/s);
+  assert.match(
+    declarations('[data-testid="agent-response"]:is(:empty,'),
+    /background-color:\s*transparent\s*!important.*backdrop-filter:\s*none\s*!important.*box-shadow:\s*none\s*!important.*padding:\s*0\s*!important/s,
+  );
   assert.match(declarations('[data-main-content-body]'), /backdrop-filter: none !important/);
   assert.doesNotMatch(declarations('[data-main-content-body]'), /backdrop-filter: blur\(/);
 });
